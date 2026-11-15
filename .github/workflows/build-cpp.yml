@@ -12,10 +12,14 @@ jobs:
       uses: actions/checkout@v4
 
     - name: 2. 编译 C++ 代码
-      run: g++ hello.cpp -o hello.exe
+      run: |
+        g++ hello.cpp -o hello.exe
+        echo "=== 编译完成，当前目录下的文件有： ==="
+        dir   # 👈 这行是为了在日志里把当前目录所有的文件打印出来，看看 exe 到底生成了没
 
     - name: 3. 上传生成的 exe 文件
       uses: actions/upload-artifact@v4
       with:
         name: my-cpp-program
-        path: hello.exe
+        path: "*.exe"  # 👈 放宽条件：只要是 exe 就给我抓上来
+        if-no-files-found: error # 👈 终极防御：如果真没找到 exe，直接给我报红叉，别骗我！
